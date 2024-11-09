@@ -11,4 +11,3 @@ create table user_ratelimiter(
 );
 
 create unique index i_user_ratelimiter_user_id on user_ratelimiter(user_id);
-create index i_user_ratelimiter_create_dt on user_ratelimiter(create_dt);
