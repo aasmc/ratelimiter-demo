@@ -3,4 +3,4 @@ values
     ('Cappuccino'),
     ('Beer'),
     ('Bread'),
-    ('Butter')
+    ('Butter');

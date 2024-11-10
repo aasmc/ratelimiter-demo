@@ -1,10 +1,11 @@
 package ru.aasmc.ratelimiter_demo.service;
 
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.data.relational.core.conversion.DbActionExecutionException;
 import org.springframework.http.HttpStatus;
+import org.springframework.jdbc.UncategorizedSQLException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.aasmc.ratelimiter_demo.exception.ServiceException;
@@ -27,6 +28,15 @@ public class UserRateLimiterService {
 
     @Transactional
     public void permitRequestOrThrow(String userId) {
+        try {
+            permitRequestOrThrowInternal(userId);
+        } catch (UncategorizedSQLException ex) {
+            log.error(ex.getMessage(), ex);
+            throw new ServiceException(HttpStatus.BAD_REQUEST,  "Cannot allow request. Error " + ex.getMessage());
+        }
+    }
+
+    private void permitRequestOrThrowInternal(String userId) {
         userRateLimiterRepository.findByUserId(userId)
                 .ifPresentOrElse(
                         rl -> {
@@ -49,9 +59,9 @@ public class UserRateLimiterService {
                             try {
                                 log.info("Trying to permit request.");
                                 userRateLimiterRepository.save(rl);
-                            } catch (DataIntegrityViolationException ex) {
+                            } catch (DbActionExecutionException ex) {
                                 log.error("Failed to permit request. Exception = {}", ex.getMessage());
-                                throw new ServiceException(HttpStatus.BAD_REQUEST, "Cannot allow request.");
+                                throw new ServiceException(HttpStatus.BAD_REQUEST, "Cannot allow request. Error " + ex.getMessage());
                             }
                         }
                 );

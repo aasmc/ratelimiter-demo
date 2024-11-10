@@ -1,9 +1,11 @@
 package ru.aasmc.ratelimiter_demo.dto;
 
+import lombok.ToString;
 import ru.aasmc.ratelimiter_demo.storage.model.MenuItem;
 
 import java.util.List;
 
+@ToString
 public class ListResponse {
     private List<MenuItem> items;
     private String user;
