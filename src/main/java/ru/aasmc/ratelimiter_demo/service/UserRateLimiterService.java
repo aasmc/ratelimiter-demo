@@ -1,5 +1,7 @@
 package ru.aasmc.ratelimiter_demo.service;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.relational.core.conversion.DbActionExecutionException;
@@ -14,16 +16,13 @@ import ru.aasmc.ratelimiter_demo.storage.repository.UserRateLimiterRepository;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class UserRateLimiterService {
 
-    private static final Logger log = LoggerFactory.getLogger(UserRateLimiterService.class);
     private static final Duration LIFETIME = Duration.ofSeconds(2);
     private final UserRateLimiterRepository userRateLimiterRepository;
-
-    public UserRateLimiterService(UserRateLimiterRepository userRateLimiterRepository) {
-        this.userRateLimiterRepository = userRateLimiterRepository;
-    }
 
     @Transactional
     public void permitRequestOrThrow(String userId) {

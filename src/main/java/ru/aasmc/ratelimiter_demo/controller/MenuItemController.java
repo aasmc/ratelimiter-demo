@@ -1,5 +1,7 @@
 package ru.aasmc.ratelimiter_demo.controller;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -13,17 +15,13 @@ import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
+@Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/menu-items")
 public class MenuItemController {
 
-    private static final Logger log = LoggerFactory.getLogger(MenuItemController.class);
-
     private final MenuItemService service;
-
-    public MenuItemController(MenuItemService service) {
-        this.service = service;
-    }
 
     @PostMapping("/create/{name}")
     @ResponseStatus(CREATED)

@@ -1,5 +1,6 @@
 package ru.aasmc.ratelimiter_demo.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.aasmc.ratelimiter_demo.storage.model.MenuItem;
 import ru.aasmc.ratelimiter_demo.storage.repository.MenuItemRepository;
@@ -7,15 +8,11 @@ import ru.aasmc.ratelimiter_demo.storage.repository.MenuItemRepository;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class MenuItemService {
 
     private final MenuItemRepository menuItemRepository;
     private final UserRateLimiterService userRateLimiterService;
-
-    public MenuItemService(MenuItemRepository menuItemRepository, UserRateLimiterService userRateLimiterService) {
-        this.menuItemRepository = menuItemRepository;
-        this.userRateLimiterService = userRateLimiterService;
-    }
 
     public void createMenuItem(String name) {
         MenuItem item = new MenuItem();
