@@ -22,6 +22,8 @@ curl http://localhost:9091/menu-items/get/userone
 printf "\n\n"
 curl http://localhost:9091/menu-items/get/userone
 printf "\n\n"
+echo -e "\n*** Sleeping for 2 seconds ***\n\n"
+sleep 2
 curl http://localhost:9091/menu-items/get/userone
 printf "\n\n"
 curl http://localhost:9091/menu-items/get/userone
@@ -30,6 +32,21 @@ curl http://localhost:9091/menu-items/get/userone
 printf "\n\n"
 curl http://localhost:9091/menu-items/get/userone
 printf "\n\n"
+curl http://localhost:9091/menu-items/get/userone
+printf "\n\n"
+curl http://localhost:9091/menu-items/get/userone
+printf "\n\n"
+
+echo -e "\n*** Sleeping for 1 seconds ***\n\n"
+sleep 1
+curl http://localhost:9091/menu-items/get/userone
+printf "\n\n"
+curl http://localhost:9091/menu-items/get/userone
+printf "\n\n"
+curl http://localhost:9091/menu-items/get/userone
+printf "\n\n"
+echo -e "\n*** Sleeping for 1 seconds ***\n\n"
+sleep 1
 curl http://localhost:9091/menu-items/get/userone
 printf "\n\n"
 

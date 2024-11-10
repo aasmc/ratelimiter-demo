@@ -3,15 +3,24 @@ package ru.aasmc.ratelimiter_demo.storage.repository;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
+import ru.aasmc.ratelimiter_demo.storage.model.TimestampRange;
 import ru.aasmc.ratelimiter_demo.storage.model.UserRateLimiter;
 
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Optional;
 
 
 @Repository
 public interface UserRateLimiterRepository extends CrudRepository<UserRateLimiter, Long> {
 
-    @Query("select * from user_ratelimiter where user_id = :userId for update nowait")
-    Optional<UserRateLimiter> findByUserId(String userId);
+    @Query("""
+        select upsert_user_ratelimiter(:userId, tstzrange(:range), :allowed, :created, :updated);
+    """)
+    int insertAndReturnAllowed(String userId,
+                               LocalDateTime created,
+                               LocalDateTime updated,
+                               TimestampRange range,
+                               int allowed);
 
 }
