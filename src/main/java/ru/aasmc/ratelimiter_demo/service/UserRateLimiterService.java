@@ -2,7 +2,6 @@ package ru.aasmc.ratelimiter_demo.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.relational.core.conversion.DbActionExecutionException;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.UncategorizedSQLException;
@@ -37,7 +36,7 @@ public class UserRateLimiterService {
     }
 
     private void permitRequestOrThrowInternal(String userId) {
-        userRateLimiterRepository.findByUserId(userId)
+        userRateLimiterRepository.findByUserIdForUpdateNoWait(userId)
                 .ifPresentOrElse(
                         rl -> {
                             LocalDateTime now = LocalDateTime.now();
