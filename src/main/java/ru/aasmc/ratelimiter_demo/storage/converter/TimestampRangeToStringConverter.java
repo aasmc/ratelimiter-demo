@@ -12,6 +12,6 @@ public class TimestampRangeToStringConverter implements Converter<TimestampRange
     @Override
     public String convert(TimestampRange source) {
         return "[" + source.getStart().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME) + "," +
-                source.getEnd().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME) + "]";
+                source.getEnd().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME) + ")";
     }
 }

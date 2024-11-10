@@ -12,7 +12,7 @@ public class StringToTimestampRangeConverter implements Converter<String, Timest
 
     @Override
     public TimestampRange convert(String source) {
-        String[] parts = source.replace("[", "").replace("]", "").split(",");
+        String[] parts = source.replace("[", "").replace(")", "").split(",");
         OffsetDateTime start = OffsetDateTime.parse(parts[0], DateTimeFormatter.ISO_OFFSET_DATE_TIME);
         OffsetDateTime end = OffsetDateTime.parse(parts[1], DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 
