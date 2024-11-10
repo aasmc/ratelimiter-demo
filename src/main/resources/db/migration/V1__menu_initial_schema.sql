@@ -24,25 +24,24 @@ CREATE OR REPLACE FUNCTION upsert_user_ratelimiter(
     p_update_dt TIMESTAMPTZ
 ) RETURNS INTEGER AS $$
 DECLARE
-existing_allowed INTEGER;
+new_allowed INTEGER;
 BEGIN
-        -- Проверяем наличие пересечения диапазонов
-    SELECT allowed INTO existing_allowed
-    FROM user_ratelimiter
-    WHERE user_id = p_user_id AND limiter_range && p_limiter_range
-        FOR UPDATE;
+        -- Попытка вставить запись
+    INSERT INTO user_ratelimiter (user_id, limiter_range, allowed, create_dt, update_dt)
+    VALUES (p_user_id, p_limiter_range, p_allowed, p_create_dt, null)
+        RETURNING allowed INTO new_allowed;
 
-    IF FOUND THEN
-            -- Если нашли запись, обновляем её
-        UPDATE user_ratelimiter
-        SET allowed = allowed - 1, update_dt = p_update_dt
-        WHERE user_id = p_user_id AND limiter_range && p_limiter_range;
-        RETURN existing_allowed - 1;
-    ELSE
-            -- Если не нашли, вставляем новую запись
-        INSERT INTO user_ratelimiter (user_id, limiter_range, allowed, create_dt, update_dt)
-        VALUES (p_user_id, p_limiter_range, p_allowed, p_create_dt, null);
-        RETURN p_allowed;
-    END IF;
+    RETURN new_allowed;  -- Успешная вставка, возвращаем значение allowed
+
+    EXCEPTION
+        WHEN unique_violation OR exclusion_violation THEN
+            -- Нарушение исключающего ограничения, выполняем обновление
+            UPDATE user_ratelimiter
+            SET allowed = allowed - 1, update_dt = p_update_dt
+            WHERE user_id = p_user_id AND limiter_range && p_limiter_range
+                    RETURNING allowed INTO new_allowed;
+            RETURN new_allowed;  -- Успешное обновление, возвращаем новое значение allowed
 END;
 $$ LANGUAGE plpgsql;
+
+

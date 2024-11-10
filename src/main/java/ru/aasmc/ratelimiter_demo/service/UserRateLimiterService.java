@@ -19,23 +19,27 @@ import java.time.OffsetDateTime;
 public class UserRateLimiterService {
 
     private static final Duration LIFETIME = Duration.ofSeconds(2);
-    private static final int ALLOWED_REQUESTS = 1;
+    private static final int ALLOWED_REQUESTS = 2;
     private final UserRateLimiterRepository userRateLimiterRepository;
 
 
-    @Transactional
     public void permitRequestOrThrow(String userId) {
         OffsetDateTime from = OffsetDateTime.now();
         OffsetDateTime to = from.plus(LIFETIME);
+        log.info("From {}. To {}.", from, to);
         int allowed = userRateLimiterRepository.insertAndReturnAllowed(
                 userId,
                 LocalDateTime.now(),
                 null,
                 new TimestampRange(from, to),
                 ALLOWED_REQUESTS);
+        log.info("Number of allowed requests: {}", allowed);
         if (allowed <= 0) {
             log.error("Cannot allow request");
-            throw new ServiceException(HttpStatus.BAD_REQUEST, "Cannot permit request.");
+            throw new ServiceException(
+                    HttpStatus.BAD_REQUEST,
+                    "Cannot permit request for user " + userId + ". Number of allowed requests = " + allowed
+            );
         }
         log.info("Request can proceed.");
     }
