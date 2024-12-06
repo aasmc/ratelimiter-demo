@@ -12,7 +12,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import ru.aasmc.ratelimiter_demo.dto.ListResponse;
+import ru.aasmc.ratelimiter_demo.dto.UserItemsResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,11 +28,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @SqlGroup(
         {
                 @Sql(
-                        scripts = "classpath:insert-menu.sql",
+                        scripts = "classpath:insert-items.sql",
                         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
                 ),
                 @Sql(
-                        scripts = "classpath:clear-menus.sql",
+                        scripts = "classpath:clear-items.sql",
                         executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD
                 )
         }
@@ -50,8 +50,8 @@ public class BaseTest {
     @Test
     void testConcurrent() throws Exception {
         int concurrentRequests = 10;
-        String userName = "userOne";
-        String url = "/menu-items/get/" + userName;
+        String userName = "Alex";
+        String url = "/items/" + userName;
         List<Callable<FutureResult>> callables = new ArrayList<>();
         ExecutorService executor = Executors.newFixedThreadPool(4);
         for (int i = 0; i < concurrentRequests; i++) {
@@ -61,7 +61,7 @@ public class BaseTest {
                         .andReturn();
                 MockHttpServletResponse response = mvcResult.getResponse();
                 if (response.getStatus() == 200) {
-                    futureResult.setResponse(mapper.readValue(response.getContentAsString(), ListResponse.class));
+                    futureResult.setResponse(mapper.readValue(response.getContentAsString(), UserItemsResponse.class));
                 } else {
                     futureResult.setError(response.getContentAsString());
                 }
@@ -85,7 +85,7 @@ public class BaseTest {
     }
 
     static class FutureResult {
-        private ListResponse response;
+        private UserItemsResponse response;
         private String error;
 
         public boolean isSuccess() {
@@ -96,11 +96,11 @@ public class BaseTest {
             return error != null && response == null;
         }
 
-        public ListResponse getResponse() {
+        public UserItemsResponse getResponse() {
             return response;
         }
 
-        public void setResponse(ListResponse response) {
+        public void setResponse(UserItemsResponse response) {
             this.response = response;
         }
 

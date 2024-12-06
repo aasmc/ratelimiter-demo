@@ -7,7 +7,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Data
 @AllArgsConstructor
@@ -19,8 +19,8 @@ public class UserRateLimiter {
     @Column("user_id")
     private String userId;
     @Column("create_dt")
-    private LocalDateTime created;
+    private Instant created;
     @Column("update_dt")
-    private LocalDateTime updated;
+    private Instant updated;
 
 }

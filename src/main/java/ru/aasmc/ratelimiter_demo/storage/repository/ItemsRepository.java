@@ -2,12 +2,12 @@ package ru.aasmc.ratelimiter_demo.storage.repository;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-import ru.aasmc.ratelimiter_demo.storage.model.MenuItem;
+import ru.aasmc.ratelimiter_demo.storage.model.Item;
 
 import java.util.List;
 
 @Repository
-public interface MenuItemRepository extends CrudRepository<MenuItem, Long> {
+public interface ItemsRepository extends CrudRepository<Item, Long> {
 
-    List<MenuItem> findAll();
+    List<Item> findAllByUser(String user);
 }
