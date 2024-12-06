@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface UserRateLimiterRepository extends CrudRepository<UserRateLimiter, Long> {
 
-    @Query("select * from user_ratelimiter where user_id = :userId for update nowait")
-    Optional<UserRateLimiter> findByUserIdForUpdateNoWait(String userId);
+    @Query("select * from user_ratelimiter where user_name = :userName for update nowait")
+    Optional<UserRateLimiter> findByUserIdForUpdateNoWait(String userName);
 
 }

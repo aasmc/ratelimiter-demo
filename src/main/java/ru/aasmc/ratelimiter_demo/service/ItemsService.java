@@ -16,6 +16,10 @@ import java.util.List;
 public class ItemsService {
 
     private static final String ITEM_METRIC = "item_event";
+    private static final String USER_TAG = "user";
+    private static final String EVENT_TAG = "event";
+    private static final String EVENT_CREATE = "event";
+    private static final String EVENT_GET = "event";
 
     private final ItemsRepository itemsRepository;
     private final UserRateLimiterService userRateLimiterService;
@@ -24,7 +28,7 @@ public class ItemsService {
     public void createItem(ItemCreateRequest request) {
         Item item = new Item(null, request.itemName(), request.user());
         itemsRepository.save(item);
-        registerCreate(request.user());
+        registerMetric(request.user(), EVENT_CREATE);
     }
 
     public UserItemsResponse getItemsOfUser(String userName) {
@@ -33,16 +37,12 @@ public class ItemsService {
                 .stream()
                 .map(Item::getName)
                 .toList();
-        registerGet(userName);
+        registerMetric(userName, EVENT_GET);
         return new UserItemsResponse(itemNames, userName);
     }
 
-    private void registerCreate(String user) {
-        meterRegistry.counter(ITEM_METRIC, List.of(Tag.of("user", user), Tag.of("event", "create"))).increment();
-    }
-
-    private void registerGet(String user) {
-        meterRegistry.counter(ITEM_METRIC, List.of(Tag.of("user", user), Tag.of("event", "get"))).increment();
+    private void registerMetric(String user, String event) {
+        meterRegistry.counter(ITEM_METRIC, List.of(Tag.of(USER_TAG, user), Tag.of(EVENT_TAG, event))).increment();
     }
 
 }

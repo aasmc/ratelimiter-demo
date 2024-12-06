@@ -13,7 +13,7 @@ public class Handler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ServiceException.class)
     public ResponseEntity<String> handleServiceEx(ServiceException ex) {
-        log.error(ex.getMessage(), ex);
+        log.error(ex.getMessage());
         return ResponseEntity.status(ex.getStatus()).body(ex.getMessage());
     }
 

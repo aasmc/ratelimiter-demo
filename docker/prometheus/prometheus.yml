@@ -12,3 +12,8 @@ scrape_configs:
     metrics_path: '/actuator/prometheus'
     static_configs:
       - targets: ['ratelimiter-service:9091']
+
+  - job_name: 'ratelimiter-service-2'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: [ 'ratelimiter-service-2:9091' ]

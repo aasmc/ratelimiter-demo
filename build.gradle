@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.3.5'
 	id 'io.spring.dependency-management' version '1.1.6'
+	id 'io.gatling.gradle' version '3.13.1'
 }
 
 group = 'ru.aasmc'
@@ -19,6 +20,7 @@ repositories {
 
 ext {
 	lokiAppenderVersion = '1.5.1'
+	gatlingVersion = '3.13.1'
 }
 
 dependencies {
@@ -40,6 +42,8 @@ dependencies {
 	testImplementation 'org.testcontainers:junit-jupiter'
 	testImplementation 'org.testcontainers:postgresql'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	implementation "io.gatling:gatling-app:${gatlingVersion}"
+	implementation "io.gatling.highcharts:gatling-charts-highcharts:${gatlingVersion}"
 }
 
 tasks.named('test') {

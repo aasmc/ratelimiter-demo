@@ -16,8 +16,8 @@ import java.time.Instant;
 public class UserRateLimiter {
     @Id
     private Long id;
-    @Column("user_id")
-    private String userId;
+    @Column("user_name")
+    private String userName;
     @Column("create_dt")
     private Instant created;
     @Column("update_dt")

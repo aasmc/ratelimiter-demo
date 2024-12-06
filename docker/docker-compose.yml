@@ -10,21 +10,38 @@ services:
       - LOKI_URL=${LOKI_URL}
       - DB_URL=${DB_URL}
       - ZIPKIN_URL=${ZIPKIN_URL}
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  ratelimiter-service-2:
+    image: "ratelimiter-demo"
+    container_name: "ratelimiter-service-2"
+    ports:
+      - "9095:9091"
+    environment:
+      - LOKI_URL=${LOKI_URL}
+      - DB_URL=${DB_URL}
+      - ZIPKIN_URL=${ZIPKIN_URL}
+    depends_on:
+      postgres:
+        condition: service_healthy
 
   postgres:
     image: "postgres:16.1"
     container_name: "postgres"
     ports:
-      - "15432:5432"
+      - "15432:15432"
     environment:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=test_db
       - PGUSER=${DB_USER}
+      - PGPORT=15432
     volumes:
       - ratelimiter:/var/lib/postgresql/data
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready", "-d", "test_db", "-U", "ratelimit" ]
+      test: [ "CMD", "pg_isready", "-U", "ratelimit", "-d", "test_db" ]
       interval: 30s
       timeout: 60s
       retries: 5
