@@ -42,22 +42,16 @@ public class RateLimiterSimulation extends Simulation {
     private static ScenarioBuilder createScenarioBuilder(String name) {
         return CoreDsl.scenario(name)
                 .exec(http("get-item-response").get("/items/Alex")
-                        .check(status().in(200, 400)));
+                        .check(status().is(200)));
     }
 
     public RateLimiterSimulation() {
         setUp(CREATE_SCENARIO_BUILDER
                         .injectOpen(
-                                constantUsersPerSec(5).during(Duration.ofSeconds(60)),
-                                rampUsersPerSec(5).to(50).during(Duration.ofSeconds(60)),
-                                constantUsersPerSec(100).during(Duration.ofSeconds(60))
-                        ).protocols(PROTOCOL_BUILDER),
-                CREATE_SCENARIO_BUILDER_2
-                        .injectOpen(
-                                constantUsersPerSec(5).during(Duration.ofSeconds(60)),
-                                rampUsersPerSec(5).to(50).during(Duration.ofSeconds(60)),
-                                constantUsersPerSec(100).during(Duration.ofSeconds(60))
-                        ).protocols(PROTOCOL_BUILDER_2)
+                                constantUsersPerSec(1).during(Duration.ofSeconds(180))
+                        ).protocols(PROTOCOL_BUILDER)
+        ).assertions(
+                global().successfulRequests().count().lte(90L)
         );
     }
 

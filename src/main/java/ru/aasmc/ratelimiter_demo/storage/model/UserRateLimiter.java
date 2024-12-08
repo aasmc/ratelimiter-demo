@@ -22,5 +22,7 @@ public class UserRateLimiter {
     private Instant created;
     @Column("update_dt")
     private Instant updated;
+    @Column("limiter_range")
+    private String range;
 
 }
