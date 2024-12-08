@@ -18,8 +18,8 @@ public class ItemsService {
     private static final String ITEM_METRIC = "item_event";
     private static final String USER_TAG = "user";
     private static final String EVENT_TAG = "event";
-    private static final String EVENT_CREATE = "event";
-    private static final String EVENT_GET = "event";
+    private static final String EVENT_CREATE = "create";
+    private static final String EVENT_GET = "get";
 
     private final ItemsRepository itemsRepository;
     private final UserRateLimiterService userRateLimiterService;
